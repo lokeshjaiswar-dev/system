@@ -28,6 +28,7 @@ const Login = () => {
       toast.success('Login successful!');
       navigate('/');
     } catch (error) {
+      console.error('Login error:', error);
       toast.error(error.response?.data?.message || 'Login failed');
     } finally {
       setLoading(false);
@@ -87,6 +88,17 @@ const Login = () => {
             </div>
           </div>
 
+          <div className="flex items-center justify-between">
+            <div className="text-sm">
+              <Link
+                to="/register"
+                className="font-medium text-purple-400 hover:text-purple-300 transition-colors"
+              >
+                Don't have an account? Sign up
+              </Link>
+            </div>
+          </div>
+
           <div>
             <button
               type="submit"
@@ -95,6 +107,15 @@ const Login = () => {
             >
               {loading ? 'Signing in...' : 'Sign in'}
             </button>
+          </div>
+
+          {/* Demo credentials */}
+          <div className="mt-6 p-4 bg-gray-700/30 rounded-lg border border-gray-600">
+            <h3 className="text-sm font-medium text-gray-300 mb-2">Demo Credentials:</h3>
+            <div className="text-xs text-gray-400 space-y-1">
+              <p><strong>Admin:</strong> admin@society.com / admin123</p>
+              <p><strong>Resident:</strong> Create a new account</p>
+            </div>
           </div>
         </form>
       </div>

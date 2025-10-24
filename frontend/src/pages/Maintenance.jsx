@@ -17,8 +17,10 @@ const Maintenance = () => {
   const fetchBills = async () => {
     try {
       const response = await maintenanceAPI.getAll();
+      console.log('Fetched bills:', response.data);
       setBills(response.data);
     } catch (error) {
+      console.error('Error fetching maintenance bills:', error);
       toast.error('Failed to fetch maintenance bills');
     } finally {
       setLoading(false);
@@ -27,21 +29,27 @@ const Maintenance = () => {
 
   const handlePayment = async (billId, paymentMethod) => {
     try {
-      await maintenanceAPI.pay(billId, paymentMethod);
-      toast.success('Payment successful!');
+      console.log('Processing payment for bill:', billId, 'method:', paymentMethod);
+      
+      const response = await maintenanceAPI.pay(billId, paymentMethod);
+      
+      toast.success('Payment successful! Confirmation email sent.');
       setShowPayment(null);
+      
+      // Refresh the bills list
       fetchBills();
     } catch (error) {
-      toast.error('Payment failed');
+      console.error('Payment error:', error);
+      toast.error(error.response?.data?.message || 'Payment failed');
     }
   };
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'paid': return 'bg-green-500/20 text-green-400 border-green-500/30';
-      case 'pending': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30';
-      case 'overdue': return 'bg-red-500/20 text-red-400 border-red-500/30';
-      default: return 'bg-gray-500/20 text-gray-400 border-gray-500/30';
+      case 'paid': return 'bg-green-500/20 text-green-400 border border-green-500/30';
+      case 'pending': return 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30';
+      case 'overdue': return 'bg-red-500/20 text-red-400 border border-red-500/30';
+      default: return 'bg-gray-500/20 text-gray-400 border border-gray-500/30';
     }
   };
 
@@ -92,7 +100,7 @@ const Maintenance = () => {
                     {formatCurrency(bill.amount)}
                   </td>
                   <td className="px-6 py-4 text-sm text-white">
-                    {new Date(bill.dueDate).toLocaleDateString()}
+                    {bill.dueDate ? new Date(bill.dueDate).toLocaleDateString() : 'Not set'}
                   </td>
                   <td className="px-6 py-4">
                     <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(bill.status)}`}>
@@ -108,7 +116,7 @@ const Maintenance = () => {
                         Pay Now
                       </button>
                     )}
-                    {bill.status === 'paid' && (
+                    {bill.status === 'paid' && bill.paidDate && (
                       <span className="text-green-400 text-sm">
                         Paid on {new Date(bill.paidDate).toLocaleDateString()}
                       </span>
@@ -123,6 +131,12 @@ const Maintenance = () => {
         {bills.length === 0 && (
           <div className="text-center py-12">
             <div className="text-gray-400 text-lg">No maintenance bills found</div>
+            <p className="text-gray-500 text-sm mt-2">
+              {user?.role === 'admin' 
+                ? 'Generate maintenance bills from the Admin Panel.'
+                : 'No maintenance bills have been generated for your flat yet.'
+              }
+            </p>
           </div>
         )}
       </div>
@@ -143,7 +157,9 @@ const Maintenance = () => {
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-400">Due Date:</span>
-                <span className="text-white">{new Date(showPayment.dueDate).toLocaleDateString()}</span>
+                <span className="text-white">
+                  {showPayment.dueDate ? new Date(showPayment.dueDate).toLocaleDateString() : 'Not set'}
+                </span>
               </div>
             </div>
             
@@ -153,19 +169,19 @@ const Maintenance = () => {
                 onClick={() => handlePayment(showPayment._id, 'razorpay')}
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg transition-colors flex items-center justify-center gap-2"
               >
-                <span>Pay with Razorpay</span>
+                <span>💳 Pay with Razorpay</span>
               </button>
               <button
                 onClick={() => handlePayment(showPayment._id, 'stripe')}
                 className="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-lg transition-colors flex items-center justify-center gap-2"
               >
-                <span>Pay with Stripe</span>
+                <span>💳 Pay with Stripe</span>
               </button>
               <button
                 onClick={() => handlePayment(showPayment._id, 'upi')}
                 className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg transition-colors flex items-center justify-center gap-2"
               >
-                <span>UPI Payment</span>
+                <span>📱 UPI Payment</span>
               </button>
             </div>
             

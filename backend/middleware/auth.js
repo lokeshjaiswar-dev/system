@@ -13,12 +13,17 @@ const auth = async (req, res, next) => {
     const user = await User.findById(decoded.userId).select('-password');
     
     if (!user) {
-      return res.status(401).json({ message: 'Token is not valid' });
+      return res.status(401).json({ message: 'Token is not valid - user not found' });
+    }
+
+    if (!user.isActive) {
+      return res.status(401).json({ message: 'Account has been deactivated' });
     }
 
     req.user = user;
     next();
   } catch (error) {
+    console.error('Auth middleware error:', error);
     res.status(401).json({ message: 'Token is not valid' });
   }
 };

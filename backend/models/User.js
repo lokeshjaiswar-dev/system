@@ -20,8 +20,18 @@ const userSchema = new mongoose.Schema({
     enum: ['admin', 'resident'],
     default: 'resident'
   },
-  wing: String,
-  flatNo: String,
+  wing: {
+    type: String,
+    required: function() { return this.role === 'resident'; }
+  },
+  flatNo: {
+    type: String,
+    required: function() { return this.role === 'resident'; }
+  },
+  flat: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Flat'
+  },
   isVerified: {
     type: Boolean,
     default: false

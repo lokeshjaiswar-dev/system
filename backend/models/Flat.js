@@ -20,7 +20,11 @@ const flatSchema = new mongoose.Schema({
   phone: String,
   email: String,
   area: Number,
-  parkingSlots: Number
+  parkingSlots: Number,
+  resident: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }
 }, {
   timestamps: true
 });

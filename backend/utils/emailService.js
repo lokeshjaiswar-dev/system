@@ -35,7 +35,6 @@ if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
 
 exports.sendVerificationEmail = async (email, code) => {
   try {
-    // If transporter is not ready yet (test account creation), wait a bit
     if (!transporter) {
       setTimeout(() => {
         exports.sendVerificationEmail(email, code);
@@ -77,8 +76,6 @@ exports.sendVerificationEmail = async (email, code) => {
     console.log('Verification email sent to:', email);
   } catch (error) {
     console.error('Error sending verification email:', error);
-    // Don't throw error to prevent registration from failing
-    console.log('Email sending failed, but user registration completed');
   }
 };
 

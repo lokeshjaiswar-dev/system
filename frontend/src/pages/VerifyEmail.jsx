@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { authAPI } from '../services/api';
 import toast from 'react-hot-toast';
 
@@ -19,6 +19,11 @@ const VerifyEmail = () => {
       return;
     }
 
+    if (code.length !== 6) {
+      toast.error('Please enter a 6-digit verification code');
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -31,6 +36,25 @@ const VerifyEmail = () => {
       setLoading(false);
     }
   };
+
+  if (!email) {
+    return (
+      <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-md w-full space-y-8 bg-gray-800/50 backdrop-blur-lg p-8 rounded-2xl border border-purple-500/20 shadow-2xl">
+          <div className="text-center">
+            <h2 className="text-3xl font-extrabold text-white mb-4">Email Not Found</h2>
+            <p className="text-gray-400 mb-6">Please complete the registration process first.</p>
+            <Link
+              to="/register"
+              className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 px-6 py-3 rounded-lg text-white font-medium transition-all duration-200"
+            >
+              Go to Registration
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -64,6 +88,15 @@ const VerifyEmail = () => {
             >
               {loading ? 'Verifying...' : 'Verify Email'}
             </button>
+          </div>
+
+          <div className="text-center">
+            <Link
+              to="/login"
+              className="font-medium text-purple-400 hover:text-purple-300 transition-colors text-sm"
+            >
+              Back to Login
+            </Link>
           </div>
         </form>
       </div>

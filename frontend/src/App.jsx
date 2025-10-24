@@ -23,15 +23,35 @@ function AdminRoute({ children }) {
   return user && user.role === 'admin' ? children : <Navigate to="/" />;
 }
 
+function PublicRoute({ children }) {
+  const { user } = useAuth();
+  return !user ? children : <Navigate to="/" />;
+}
+
 function App() {
   return (
     <AuthProvider>
       <Router>
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900">
           <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/verify-email" element={<VerifyEmail />} />
+            {/* Public routes - only accessible when not logged in */}
+            <Route path="/login" element={
+              <PublicRoute>
+                <Login />
+              </PublicRoute>
+            } />
+            <Route path="/register" element={
+              <PublicRoute>
+                <Register />
+              </PublicRoute>
+            } />
+            <Route path="/verify-email" element={
+              <PublicRoute>
+                <VerifyEmail />
+              </PublicRoute>
+            } />
+
+            {/* Protected routes - require authentication */}
             <Route path="/" element={
               <ProtectedRoute>
                 <Dashboard />
@@ -62,11 +82,16 @@ function App() {
                 <MemoryLane />
               </ProtectedRoute>
             } />
+
+            {/* Admin only routes */}
             <Route path="/admin" element={
               <AdminRoute>
                 <AdminPanel />
               </AdminRoute>
             } />
+
+            {/* Fallback route */}
+            <Route path="*" element={<Navigate to="/" />} />
           </Routes>
           <Toaster position="top-right" />
         </div>

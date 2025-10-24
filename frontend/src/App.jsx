@@ -11,10 +11,16 @@ import Notices from './pages/Notices';
 import Complaints from './pages/Complaints';
 import Maintenance from './pages/Maintenance';
 import MemoryLane from './pages/MemoryLane';
+import AdminPanel from './pages/AdminPanel';
 
 function ProtectedRoute({ children }) {
   const { user } = useAuth();
   return user ? children : <Navigate to="/login" />;
+}
+
+function AdminRoute({ children }) {
+  const { user } = useAuth();
+  return user && user.role === 'admin' ? children : <Navigate to="/" />;
 }
 
 function App() {
@@ -55,6 +61,11 @@ function App() {
               <ProtectedRoute>
                 <MemoryLane />
               </ProtectedRoute>
+            } />
+            <Route path="/admin" element={
+              <AdminRoute>
+                <AdminPanel />
+              </AdminRoute>
             } />
           </Routes>
           <Toaster position="top-right" />

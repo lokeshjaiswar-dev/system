@@ -5,7 +5,7 @@ import { useAuth } from '../contexts/AuthContext';
 const Dashboard = () => {
   const { user } = useAuth();
 
-  const features = [
+  const residentFeatures = [
     {
       title: 'Flat Management',
       description: 'View all society flats, their status and owner information',
@@ -38,16 +38,65 @@ const Dashboard = () => {
     }
   ];
 
+  const adminFeatures = [
+    {
+      title: 'Admin Panel',
+      description: 'Manage society operations, residents, and financials',
+      icon: '⚙️',
+      path: '/admin'
+    },
+    {
+      title: 'Flat Management',
+      description: 'Add and manage society flats and resident information',
+      icon: '🏢',
+      path: '/flats'
+    },
+    {
+      title: 'Notices',
+      description: 'Create and manage society announcements and notices',
+      icon: '📢',
+      path: '/notices'
+    },
+    {
+      title: 'Complaints',
+      description: 'Monitor and resolve resident complaints and issues',
+      icon: '📝',
+      path: '/complaints'
+    },
+    {
+      title: 'Maintenance',
+      description: 'Generate and track maintenance bills and payments',
+      icon: '💰',
+      path: '/maintenance'
+    },
+    {
+      title: 'Memory Lane',
+      description: 'Manage society memories and community events',
+      icon: '📅',
+      path: '/memory-lane'
+    }
+  ];
+
+  const features = user?.role === 'admin' ? adminFeatures : residentFeatures;
+
   return (
     <Layout>
       {/* Welcome Section */}
       <div className="text-center mb-12">
         <h1 className="text-4xl font-bold text-white mb-4">
-          Welcome back, {user?.name}! 👋
+          Welcome back, {user?.name}! {user?.role === 'admin' ? '👑' : '👋'}
         </h1>
         <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-          Manage your society activities efficiently with SocietyHub - Your complete society management solution
+          {user?.role === 'admin' 
+            ? 'Manage your society efficiently with complete administrative controls'
+            : 'Manage your society activities efficiently with SocietyHub'
+          }
         </p>
+        {user?.role === 'admin' && (
+          <div className="mt-4 inline-flex items-center px-4 py-2 bg-purple-600/20 border border-purple-500/30 rounded-full">
+            <span className="text-purple-400 text-sm">Administrator Access</span>
+          </div>
+        )}
       </div>
 
       {/* Features Grid */}

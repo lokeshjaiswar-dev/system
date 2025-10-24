@@ -27,7 +27,11 @@ const userSchema = new mongoose.Schema({
     default: false
   },
   verificationCode: String,
-  phone: String
+  phone: String,
+  isActive: {
+    type: Boolean,
+    default: true
+  }
 }, {
   timestamps: true
 });

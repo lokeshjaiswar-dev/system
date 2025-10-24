@@ -18,6 +18,7 @@ app.use('/api/notices', require('./routes/notices'));
 app.use('/api/complaints', require('./routes/complaints'));
 app.use('/api/maintenance', require('./routes/maintenance'));
 app.use('/api/memorylane', require('./routes/memorylane'));
+app.use('/api/admin', require('./routes/admin')); // New admin routes
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/society-management')

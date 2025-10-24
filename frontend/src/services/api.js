@@ -34,11 +34,21 @@ export const authAPI = {
   getCurrentUser: () => api.get('/auth/me'),
 };
 
+export const adminAPI = {
+  getDashboardStats: () => api.get('/admin/dashboard-stats'),
+  getUsers: () => api.get('/admin/users'),
+  createAdmin: (adminData) => api.post('/admin/create-admin', adminData),
+  updateUserStatus: (id, isActive) => api.put(`/admin/users/${id}/status`, { isActive }),
+  bulkGenerateMaintenance: (data) => api.post('/admin/maintenance/bulk-generate', data),
+  getFinancialSummary: (month, year) => api.get(`/admin/financial-summary?month=${month}&year=${year}`),
+};
+
 export const flatsAPI = {
   getAll: (wing) => api.get(`/flats${wing ? `?wing=${wing}` : ''}`),
   getWings: () => api.get('/flats/wings'),
   create: (flatData) => api.post('/flats', flatData),
   update: (id, flatData) => api.put(`/flats/${id}`, flatData),
+  delete: (id) => api.delete(`/flats/${id}`),
 };
 
 export const noticesAPI = {

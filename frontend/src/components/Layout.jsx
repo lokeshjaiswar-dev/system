@@ -22,6 +22,11 @@ const Layout = ({ children }) => {
     { name: 'Memory Lane', href: '/memory-lane', icon: '📅' },
   ];
 
+  // Add admin-only navigation items
+  if (user?.role === 'admin') {
+    navigation.push({ name: 'Admin Panel', href: '/admin', icon: '⚙️' });
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900">
       {/* Header */}
@@ -60,7 +65,8 @@ const Layout = ({ children }) => {
               <div className="text-right">
                 <p className="text-sm font-medium text-white">{user?.name}</p>
                 <p className="text-xs text-gray-400">
-                  {user?.wing && user?.flatNo ? `${user.wing}-${user.flatNo}` : 'Admin'}
+                  {user?.role === 'admin' ? 'Administrator' : `${user?.wing}-${user?.flatNo}`}
+                  {user?.role === 'admin' && ' 👑'}
                 </p>
               </div>
               <div className="relative">

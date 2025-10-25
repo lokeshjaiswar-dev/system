@@ -8,7 +8,7 @@ const flatSchema = new mongoose.Schema({
   flatNo: {
     type: String,
     required: true,
-    unique: true
+    // unique: true
   },
   status: {
     type: String,
@@ -28,5 +28,7 @@ const flatSchema = new mongoose.Schema({
 }, {
   timestamps: true
 });
+
+flatSchema.index({ wing: 1, flatNo: 1 }, { unique: true });
 
 module.exports = mongoose.model('Flat', flatSchema);
